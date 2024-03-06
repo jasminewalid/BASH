@@ -18,13 +18,13 @@ table_menu()
 
     read -r Choice
     case $Choice in
-        1) table_menu/createTable.sh ;;
-        2) table_menu/listTables.sh ;;
-        3) table_menu/selectFromTable.sh ;;
-        4) table_menu/insertIntoTable.sh ;;
-        5) table_menu/updateTable.sh ;;
-        6) table_menu/deleteFromTable.sh ;;
-        7) table_menu/dropTable.sh ;;
+        1) table_menu/create-Table.sh ;;
+        2) table_menu/List-Tables.sh ;;
+        3) table_menu/Select-From-Table.sh ;;
+        4) table_menu/Insert-Into-Table.sh ;;
+        5) table_menu/Update-Table.sh ;;
+        6) table_menu/Delete-From-Table.sh ;;
+        7) table_menu/Drop-Table.sh ;;
         8) echo "ByeBye!"
            exit ;;
 
