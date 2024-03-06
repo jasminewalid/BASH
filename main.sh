@@ -20,6 +20,7 @@ main_menu() {
         4) main_menu/dropDB.sh ;;
         5) echo -e "ByeBye!"
            exit ;;
+           
         *) echo -e "Invalid choice, please choose from the listed items!"
            main_menu ;;
     esac
