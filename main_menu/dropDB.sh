@@ -16,3 +16,4 @@ function dropDB ()
 }
 
 dropDB
+./main.sh

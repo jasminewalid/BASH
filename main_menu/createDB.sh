@@ -10,8 +10,9 @@ function createDB ()
 
 
     else
-        mkdir "databases/$DB_name" 
+        mkdir -p "databases/$DB_name" 
         echo "Database '$DB_name' created successfully."
     fi
 }
 createDB
+./main.sh

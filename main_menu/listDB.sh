@@ -1,14 +1,19 @@
 #!/bin/bash
 
-function connectToDB () 
+function listDB () 
 {
-    read -p "Enter the name of the database to connect: " DB_name
-    if [ -d "databases/$DB_name" ]; then
-        # Call the script to manage the selected database
-        ./manageDB.sh "databases/$DB_name"
-        
+    local databases=$(find databases -maxdepth 1 -mindepth 1 -type d -printf '%f\n')
+
+    if [ -z "$databases" ]; then
+        echo "Currently, there are no databases in the system." 
+        # Validation for whether there are any databases or not
+
     else
-        echo "Database '$DB_name' does not exist."
+        echo "List of Databases:"
+        echo "$databases"
+        #ls -d */ | cut -f1 -d'/'
     fi
 }
-connectToDB
+
+listDB
+./main.sh
