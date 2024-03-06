@@ -3,8 +3,8 @@
 function dropDB ()
 {
     read -p "Enter the name of the database to drop: " DB_name
-    if [ -d "$DB_name" ]; then
-        rm -r "$DB_name"
+    if [ -d "databases/$DB_name" ]; then
+        rm -r "databases/$DB_name"
 
         echo "Database '$DB_name' dropped successfully."
 
@@ -14,4 +14,5 @@ function dropDB ()
 
     fi
 }
+
 dropDB
