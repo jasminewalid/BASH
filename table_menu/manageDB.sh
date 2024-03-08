@@ -18,7 +18,7 @@ table_menu()
 
     read -r Choice
     case $Choice in
-        1) table_menu/create-Table.sh ;;
+        1) table_menu/Create-Table.sh ;;
         2) table_menu/List-Tables.sh ;;
         3) table_menu/Select-From-Table.sh ;;
         4) table_menu/Insert-Into-Table.sh ;;
