@@ -43,7 +43,7 @@ else
 fi
 
 # Adding rows to the table
-echo "Enter values for the new row (in the same order as columns): "
+:' echo "Enter values for the new row (in the same order as columns): "
 read -r new_row_values
 
 # Append the new row to the table
@@ -53,4 +53,4 @@ if [ $? -eq 0 ]; then
     echo "New row added successfully"
 else
     echo "Failed to add new row"
-fi
+fi'

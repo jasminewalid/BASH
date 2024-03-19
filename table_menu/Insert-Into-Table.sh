@@ -1,67 +1,41 @@
-#! /bin/bash
+#!/bin/bash
 
-echo "Enter your Database Name : "
+echo "Enter your Database Name: "
 read DB_name
 
-echo "Available tables are : $(ls ./databases/$DB_name)"
-
-echo "Which table do you want to insert into : "
+echo "Enter your Table Name: "
 read TableName
 
-row=""
+if [ ! -d "./databases/$DB_name" ]; then
+    echo "$DB_name does not exist"
+    exit 1
+fi
 
-# Get the number of columns in the table
-columnCount=$(awk -F, 'NR==1 {print NF}' ./databases/$DB_name/$TableName)
+if [ ! -f "./databases/$DB_name/$TableName" ]; then
+    echo "$TableName does not exist in $DB_name"
+    exit 1
+fi
 
-for ((i=1; i<=$columnCount; i++)); do
-    columnNumber=$i
-    echo -n "$i - "
+columns=$(head -n 1 "./databases/$DB_name/$TableName")
 
-    # Get column type and name
-    columnType=$(grep "%," ./databases/$DB_name/$TableName | cut -d "," -f$columnNumber | cut -d% -f3)
-    colName=$(grep "%," ./databases/$DB_name/$TableName | cut -d "," -f$columnNumber | cut -d% -f2)
+echo "Your Columns are : "
+echo "$columns"
 
-    echo "Column Name: $colName, Type: $columnType"
+values=""
 
-    # Prompt user for value of the column
-    echo -n "Enter the value of column number $columnNumber : "
-    read val
-
-    # Validate input based on column data type
-    if [ "$columnType" == "string" ]; then
-        # Validation for string datatype
-        while [[ -z $val || $val =~ [\,\;\:\-\/\\] ]]; do
-            echo "Invalid input! Empty value or special characters are not allowed."
-            echo -n "Enter the value of column number $columnNumber : "
-            read val
-        done
-    elif [ "$columnType" == "int" ]; then
-        # Validation for integer datatype
-        while ! [[ "$val" =~ ^[0-9]+$ ]]; do
-            echo "Invalid input! Datatype of column number $columnNumber is integer."
-            echo -n "Enter the value of column number $columnNumber : "
-            read val
-        done
-    fi
-
-    # Check if the column is a primary key
-    testPk=$(grep "%," ./databases/$DB_name/$TableName | cut -d "," -f$columnNumber | grep %Pk% | cut -d% -f4)
-
-    # Check if the value already exists in the primary key column
-    if [ "$testPk" == "Pk" ]; then
-        if grep -qw "$val" ./databases/$DB_name/$TableName; then
-            echo "This value already exists"
-            main_menu/connectToDB.sh
-        else
-            if [ -z "$row" ]; then
-                row="$val"
-            else
-                row="$row,$val"
-            fi
-        fi
-    fi
+# Prompt user to enter values for each column
+IFS=',' read -ra colNames <<< "$columns"
+for colName in "${colNames[@]}"; do
+    echo "Enter value for $colName: "
+    read value
+    values="$values$value,"
 done
 
-echo "$row" >> ./databases/$DB_name/$TableName 2>/dev/null
+# Trim trailing comma
+values="${values%,}"
+
+# Append the new row to the table
+echo "$values" >> "./databases/$DB_name/$TableName"
+
 echo "Your data has been updated successfully"
 main_menu/connectToDB.sh
