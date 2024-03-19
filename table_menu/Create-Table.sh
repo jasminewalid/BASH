@@ -37,7 +37,7 @@ then
     done                                          
 
     i=1
-    separator=", "
+    separator=","
     pkey="true"
     metadata=""  # the output data about each column    
 
@@ -66,31 +66,37 @@ then
             esac
         done 
         
+        Pk="notPrimk"
         if [ $pkey == "true" ]; then               # to make this column Primary key or Not                   
             echo "Do you want to make it a primary Key? [y/n] : "
             read choice
             case $choice in
                 [Yy] )
-                    pkey="Pk"
+                    Pk="Pk"
+                    pkey="False"
                     ;;
                 [Nn] ) 
+                    Pk="notPrimk"
                     ;;
                 * )
                     echo "invalid choice. please type Y or N."
             esac
         fi
-        metadata+="$colName$colType$pkey$separator"                                   
+        metadata+="$colName$colType$Pk$separator"                                   
         ((i=$i+1))                              # to increase i by 1 
-    done                                   
+        
+    done    
+    metadata=${metadata%?}                               
 
     echo "$metadata" >> ./databases/$DB_name/$TableName
     
     if [ $? == 0 ]; then                        # to check the last run by the right way
         echo "Table created successfully!"
+    
     else
         echo "There were errors, could not create $TableName"
     fi
-    main_menu/connectToDB.sh # to go back to the menu again
+    table_menu/manageDB.sh # to go back to the menu again
 
 else
     echo "$DB_name does not exist"

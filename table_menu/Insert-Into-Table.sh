@@ -26,9 +26,31 @@ values=""
 # Prompt user to enter values for each column
 IFS=',' read -ra colNames <<< "$columns"
 for colName in "${colNames[@]}"; do
-    echo "Enter value for $colName: "
-    read value
-    values="$values$value,"
+    if [[ $colName == *"Pk"* ]]; then
+        while true; do
+            echo "Enter value for $colName : "
+            read value
+
+            # Check if primary key value is not null
+            if [ -z "$value" ]; then
+                echo "Primary key value cannot be empty"
+                continue
+            fi
+
+            # Check if primary key value already exists
+            if grep -q "^$value" "./databases/$DB_name/$TableName"; then
+                echo "Primary key value already exists. Please enter a unique value."
+                continue
+            fi
+
+            values="$values$value,"
+            break
+        done
+    else
+        echo "Enter value for $colName: "
+        read value
+        values="$values$value,"
+    fi
 done
 
 # Trim trailing comma

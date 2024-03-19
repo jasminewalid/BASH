@@ -29,28 +29,15 @@ if ! grep -q "$column_name" <<< "$columns"; then
     exit 1
 fi
 
-echo "Enter the new value for $column_name: "
-read new_value
 
-# Update the column in the table
-awk -v col="$column_name" -v val="$new_value" 'BEGIN{FS=OFS=","} NR==1{$col=val} NR>1{$col=$col} 1' "./databases/$DB_name/$TableName" > temp && mv temp "./databases/$DB_name/$TableName"
+ echo "Enter the new value: "
+ read new_value
+
+awk -v col="$column_name" -v val="$new_value" 'BEGIN{FS=OFS=","} {if (NR > 1) $col=val} 1' "./databases/$DB_name/$TableName" > temp && mv temp "./databases/$DB_name/$TableName"
 
 if [ $? -eq 0 ]; then
-    echo "Column $column_name updated successfully with value $new_value"
+  echo "Column $column_name updated successfully with value $new_value"
 else
-    echo "Failed to update column $column_name"
-    exit 1
+  echo "Failed to update column $column_name"
+  exit 1
 fi
-
-# Adding rows to the table
-:' echo "Enter values for the new row (in the same order as columns): "
-read -r new_row_values
-
-# Append the new row to the table
-echo "$new_row_values" >> "./databases/$DB_name/$TableName"
-
-if [ $? -eq 0 ]; then
-    echo "New row added successfully"
-else
-    echo "Failed to add new row"
-fi'
